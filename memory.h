@@ -5,9 +5,10 @@
  * SMSARCH cartridge archiver documentation.
  */
 
-#define RAM_SIZE                (1 << 13)
+#define BIOS_SIZE		(1 << 13)
 #define MAXIMUM_ROM_SIZE        (1 << 22)
 #define MAXIMUM_CARTRIDGE_RAM   (1 << 15)
+#define RAM_SIZE                (1 << 13)
 
 /* Memory is divided in "mappings", this allows for fast implementation of 
  * mirroring and unpaged regions.
@@ -61,10 +62,13 @@
 
 typedef struct {
 
+        uint8_t bios[BIOS_SIZE];
+
         uint8_t *rom;
         int     rom_size, number_rom_banks, rom_banks_mask;
 
         uint8_t ram[RAM_SIZE];
+	int	is_ram_enabled;
 
         uint8_t cart_ram[MAXIMUM_CARTRIDGE_RAM];
 	int	cart_ram_size;
