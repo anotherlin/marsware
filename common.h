@@ -25,5 +25,6 @@ typedef unsigned __int64	uint64_t;
 
 void	Warning (const char *message, ...);
 void	Fatal (const char *message, ...);
+void	FatalCantOpenFile (void);
 
 #endif

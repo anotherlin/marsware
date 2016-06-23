@@ -62,18 +62,24 @@
 
 typedef struct {
 
-        uint8_t bios[BIOS_SIZE];
+	uint8_t bios[BIOS_SIZE];
+	int	is_bios_loaded;
 
         uint8_t *rom;
-        int     rom_size, number_rom_banks, rom_banks_mask;
+        int     rom_size, number_rom_banks, rom_banks_mask, is_rom_loaded;
 
         uint8_t ram[RAM_SIZE];
-	int	is_ram_enabled;
 
         uint8_t cart_ram[MAXIMUM_CARTRIDGE_RAM];
 	int	cart_ram_size;
 
         uint8_t *mappings[NUMBER_MAPPINGS];
+
+	/* if rom_size < 32k, rom is enabled if card enabled, otherwise
+  	 * simulate as cartridge.
+  	 */
+
+	int	is_bios_enabled, is_rom_enabled, is_ram_enabled;
 	int	is_cart_ram_mapped;
 
 } MEMORY;

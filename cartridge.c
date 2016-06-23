@@ -62,7 +62,7 @@ void ReadCartridge (MEMORY *memory, const char *filename)
 	printf("Loading ROM file \"%s\".\n", filename);
         if ((file = fopen(filename, "rb")) == NULL)
 
-                Fatal("Cannot open file!\n");
+                FatalCantOpenFile();
 
 	fseek(file, 0, SEEK_END);
 	size = (int) ftell(file);
@@ -114,7 +114,7 @@ void ReadCartridgeRAM (MEMORY *memory, const char *filename)
 	printf("Loading cartridge RAM file \"%s\".\n", filename);
         if ((file = fopen(filename, "rb")) == NULL) 
 
-		Fatal("Cannot open file!\n");
+                FatalCantOpenFile();
 
 	fseek(file, 0, SEEK_END);
 	size = (int) ftell(file);

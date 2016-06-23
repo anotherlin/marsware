@@ -23,3 +23,8 @@ void Fatal (const char *message, ...)
 
 	exit(EXIT_FAILURE);
 }
+
+void FatalCantOpenFile (void)
+{
+	Fatal("Cannot open file!\n");
+}
