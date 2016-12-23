@@ -53,23 +53,19 @@ typedef struct {
 	int		sprite_shift;
 
 	
+	uint32_t	*frame_buffer;
 
 } VDP;
 
 extern void	ResetVDP (VDP *vdp, int is_game_gear);
-extern int	EmulateVDP (VDP *vdp, int number_cycles);
+extern int	EmulateVDP (VDP *vdp, int elapsed_cycles, int number_cycles);
 
-/* 0x7e, 0x7e !! */
 
 extern int	ReadVCounter (VDP *vdp);
 extern int	ReadHCounter (VDP *vdp);
-		
-/* Port 0xbe. */
 
 extern int	ReadVDPData (VDP *vdp);
 extern void	WriteVDPData (VDP *vdp, int x);
-
-/* Port 0xbf. */
 
 extern int 	ReadVDPStatus (VDP *vdp);
 extern void 	WriteVDPCommand (VDP *vdp, int x);

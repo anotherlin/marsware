@@ -1,12 +1,6 @@
 #ifndef __COMMON_INCLUDED__
 #define __COMMON_INCLUDED__
 
-#define ALLOW_UNALIGNED_MEMORY_ACCESS
-
-/* #define IS_BIG_ENDIAN */
-
-#define IS_64BIT
-
 #ifdef _MSC_VER
 
 typedef unsigned __int8		uint8_t;
