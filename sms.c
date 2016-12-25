@@ -10,7 +10,7 @@ uint8_t ReadPort (SMS *sms, int port)
 	case 1:
 
 		return port & 1
-			? ReadVCounter(&sms->vdp);
+			? ReadVCounter(&sms->vdp)
 			: ReadHCounter(&sms->vdp);
 
 	case 2: 
@@ -19,7 +19,7 @@ uint8_t ReadPort (SMS *sms, int port)
 			? ReadVDPStatus(&sms->vdp)
 			: ReadVDPData(&sms->vdp);
 
-	case 3:
+	case 3: return 0;
 	
 	}
 }

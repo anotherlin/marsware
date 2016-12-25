@@ -1,27 +1,35 @@
 #ifndef __COMMON_INCLUDED__
 #define __COMMON_INCLUDED__
 
-#define ALLOW_UNALIGNED_MEMORY_ACCESS
+/* ARM processors are big endian. */
 
 /* #define IS_BIG_ENDIAN */
 
+/* x86 processors allow non-aligned memory access. */
+
+#define ALLOW_UNALIGNED_MEMORY_ACCESS
+
+/* The VDP renderer can take advantage of a 64-bit processor. */
+
 #define IS_64BIT
 
-#ifdef _MSC_VER
+/* If compiling with gcc or a compatible compiler, try to auto-detect the 
+ * configuration macros.
+ */
 
-typedef unsigned __int8		uint8_t;
-typedef unsigned __int16	uint16_t;
-typedef unsigned __int32	uint32_t;
-
-#ifdef IS_64BIT
-typedef unsigned __int64	uint64_t;
+#if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN___
+#define IS_BIG_ENDIAN
 #endif
 
-#else
+#if defined(__x86_64__) || defined(__i386__)
+#define ALLOW_UNALIGNED_MEMORY_ACCESS
+#endif
+
+#ifdef __LP64__
+#define IS_64BIT
+#endif
 
 #include <stdint.h>
-
-#endif
 
 void	Warning (const char *message, ...);
 void	Fatal (const char *message, ...);

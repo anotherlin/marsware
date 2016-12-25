@@ -195,13 +195,13 @@ static void write_register (VDP *vdp, int r, int x)
 
 	if (r == 5)
 
-		p = vdp->vram + ((x & R5_SPAT_MASK) << R5_SPAT_SHIFT;
+		p = vdp->vram + ((x & R5_SPAT_MASK) << R5_SPAT_SHIFT);
 
 	else if (r == 6) {
 
-		p = vdp->vram + ((x & R6_SP_MASK) << R6_SP_SHIFT;
+		p = vdp->vram + ((x & R6_SP_MASK) << R6_SP_SHIFT);
 
-	} else if (r == 7)
+	} else if (r == 7) {
 
 		vdp->border_color_index = x & R7_BC_MASK;
 

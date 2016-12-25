@@ -15,7 +15,7 @@ memory.o: memory.c memory.h common.h
 
 vdp.o: vdp.c vdp.h common.h
 
-z80emu.o: z80emu.c z80emu.h instructions.h macros.h tables.h z80io.h sms.h
+z80emu.o: z80emu.c z80emu.h instructions.h macros.h tables.h z80user.h sms.h
 
 cartridge.o: cartridge.c cartridge.h memory.h sms.h
 
