@@ -1,11 +1,24 @@
+/* memory.h
+ *
+ *
+ * Copyright (C) 2017 Lin Ke-Fong
+ *
+ * This code is free, you may do whatever you want with it.
+ */
+
 #ifndef __MEMORY_INCLUDED__
 #define __MEMORY_INCLUDED__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "config.h"
 
 /* Memory system implementation is based on information from Eric Quinn's 
  * SMSARCH cartridge archiver documentation.
  */
 
-#define BIOS_SIZE		(1 << 13)
 #define MAXIMUM_ROM_SIZE        (1 << 22)
 #define MAXIMUM_CARTRIDGE_RAM   (1 << 15)
 #define RAM_SIZE                (1 << 13)
@@ -55,38 +68,54 @@
 }
 
 /* ROM size must be a multiple of 16k bank. If smaller than 16k, then it is to
- * be rounded to the nearest power of 2 and mirrored inside the 16k. Cartridge 
- * RAM size is also to be rounded to the nearest power of 2, with a minimum 
- * size of a mapping.
+ * be rounded to the nearest power of 2 and mirrored inside the 16k. BIOS is 
+ * emulated as a standard ROM as 128k BIOS makes use of the memory mapper.
+ * Cartridge RAM must have a minimum size of one mapping (1k) 
+
+
+and follows the 
+ * same rule as ROM
+ * nearest power of 2, it 
+size is also to be rounded to the nearest power of 2, with a 
+ * minimum size of one mapping (1k).
  */
 
 typedef struct {
 
-	uint8_t bios[BIOS_SIZE];
-	int	is_bios_loaded;
+        uint8_t *content;
+        int     size, number_banks, bank_mask, is_loaded;
 
-        uint8_t *rom;
-        int     rom_size, number_rom_banks, rom_banks_mask, is_rom_loaded;
+} ROM;
 
-        uint8_t ram[RAM_SIZE];
+typedef struct {
 
-        uint8_t cart_ram[MAXIMUM_CARTRIDGE_RAM];
-	int	cart_ram_size;
+        uint8_t content[MAXIMUM_CARTRIDGE_RAM];
+	int	size, number_mappings, mapping_mask, is_loaded;
 
-        uint8_t *mappings[NUMBER_MAPPINGS];
+} CART_RAM;
 
-	/* if rom_size < 32k, rom is enabled if card enabled, otherwise
-  	 * simulate as cartridge.
-  	 */
+typedef struct {
 
-	int	is_bios_enabled, is_rom_enabled, is_ram_enabled;
-	int	is_cart_ram_mapped;
+        uint8_t 	ram[RAM_SIZE];
+	ROM		bios;
+	ROM		card;
+	ROM		cartridge;
+	CART_RAM	cart_ram;
+
+	ROM		*rom;
+        uint8_t 	*mappings[NUMBER_MAPPINGS];
+
+	int		is_ram_enabled, 
+			is_bios_enabled, is_card_enabled, is_cart_enabled,  
+			is_cart_ram_mapped;
 
 } MEMORY;
 
 extern void	ResetMemoryMapper (MEMORY *memory);
 extern void	WriteFrameControlRegister (MEMORY *memory, int address, int x);
 
-extern int	RoundToPower2 (int n);
+#ifdef __cplusplus
+}
+#endif
 
 #endif

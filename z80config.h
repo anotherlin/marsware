@@ -1,17 +1,21 @@
 /* z80config.h 
- * Define or comment out macros in this file to configure the emulator. 
+ * Define or comment out macros in this file to configure z80emu. 
  *
- * Copyright (c) 2016 Lin Ke-Fong
+ * Copyright (C) 2016-2017 Lin Ke-Fong
  *
- * This program is free, do whatever you want with it.
+ * This code is free, you may do whatever you want with it.
  */
 
 #ifndef __Z80CONFIG_INCLUDED__
 #define __Z80CONFIG_INCLUDED__
 
+#include "config.h"
+
 /* Define this macro if the host processor is big endian. */
 
-/* #define Z80_BIG_ENDIAN */
+#ifdef IS_BIG_ENDIAN
+#define Z80_BIG_ENDIAN
+#endif
 
 /* Emulation can be speed up a little bit by emulating only the documented
  * flags.

@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "config.h"
+#include "common.h"
 #include "memory.h"
 #include "sms.h"
+
 #include "cartridge.h"
 
 #define SEGA_STRING_LENGTH      8
@@ -50,6 +53,7 @@ static const int ROM_SIZES[16] = {
 
 };
 
+static uint32_t	round_pow2 (uint32_t n);
 static void	zero_fill (uint8_t *p, const uint8_t *q);
 static void	mirror (uint8_t *p, int n, int size);
 static void 	read_header (SMS *sms, int offset);
@@ -91,7 +95,7 @@ void ReadCartridge (MEMORY *memory, const char *filename)
 		printf("ROM size is smaller than bank size, it will be "
 			"rounded to a power of two\n and mirrored inside a "
 			"bank.\n");
-		if ((p2 = RoundToPower2(size)) < MAPPING_SIZE) 
+		if ((p2 = round_pow2(size)) < MAPPING_SIZE) 
 
 			p2 = MAPPING_SIZE;
 
@@ -104,6 +108,33 @@ void ReadCartridge (MEMORY *memory, const char *filename)
 		zero_fill(memory->rom + size, memory->rom + memory->rom_size);
 
 	}
+	is_rom_loaded = !0;
+}
+
+void ReadBIOS (MEMORY *memory, const char *filename)
+{
+        FILE    *file;
+        int     size;
+
+        printf("Loading BIOS file \"%s\".\n", filename");
+        if ((file = fopen(filename, "rb")) == NULL)
+
+                FatalCantOpenFile();
+
+        fseek(file, 0, SEEK_END)
+        size = (int) ftell(file);
+        fseek(file, 0, SEEK_SET);
+        if (size != BIOS_SIZE)
+
+                Fatal("BIOS file is %d byte(s) instead of %d!\n",
+                        size, BIOS_SIZE);
+
+        if (fread(memory->bios, 1, BIOS_SIZE, file) != BIOS_SIZE)
+
+                Fatal("An error occured while reading BIOS!\n");
+
+        fclose(file);
+        memory->is_bios_loaded = !0;
 }
 
 void ReadCartridgeRAM (MEMORY *memory, const char *filename)
@@ -129,7 +160,7 @@ void ReadCartridgeRAM (MEMORY *memory, const char *filename)
 
 	fclose(file);
 
-	if ((p2 = RoundToPower2(size)) < MAPPING_SIZE) p2 = MAPPING_SIZE;
+	if ((p2 = round_pow2(size)) < MAPPING_SIZE) p2 = MAPPING_SIZE;
 	zero_fill(memory->cart_ram + size, memory->cart_ram + p2);
 	memory->cart_ram_size = p2;
 }
@@ -171,6 +202,17 @@ void FindAndReadHeader (SMS *sms)
 
 	sms->is_game_gear = 0;
 	Warning("Unable to find header, emulating a Master System.\n");
+}
+
+static uint32_t	round_pow2 (uint32_t n)
+{
+        n--;
+        n |= n >> 1;
+        n |= n >> 2;
+        n |= n >> 4;
+        n |= n >> 8;
+        n |= n >> 16;
+        return n + 1;
 }
 
 static void zero_fill (uint8_t *p, const uint8_t *q)
